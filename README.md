@@ -25,7 +25,7 @@ All you have to do is enter a video link from a desired channel!
 
 ## Getting Started
 
-To launch the app on your local environment, you will need the above libraries installed using conda
-To use Youtube Data API v3, you will need to obtain an API key from Google Developer Console (available with a Google account) that you will store in a .env file
+- To launch the app on your local environment, you will need the above libraries installed using conda.
+- To use Youtube Data API v3, you will need to obtain an API key from Google Developer Console (available with a Google account) that you will store in a .env file
 
 
