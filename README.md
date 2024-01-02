@@ -1,5 +1,3 @@
-# Youtube Data Analysis App
-
 ## About The Project
 
 Video Demo: 
