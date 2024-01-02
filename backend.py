@@ -20,12 +20,16 @@ api_version = "v3"
 # youtube = build(
 #     api_service_name, api_version, developerKey=API_KEY)
 
-def get_channel_stats(youtube, channel_id):
+@st.cache_data(ttl=30)
+def get_channel_stats(_youtube, channel_id):
     channel_data = {}
-    request = youtube.channels().list(
-        part="snippet,contentDetails,statistics",
-        id=channel_id
-    )
+    try:
+        request = _youtube.channels().list(
+            part="snippet,contentDetails,statistics",
+            id=channel_id
+        )
+    except:
+        print("Error getting channel data")
 
     response = request.execute()
 
@@ -39,19 +43,23 @@ def get_channel_stats(youtube, channel_id):
 
     return channel_data
 
-def get_video_ids(youtube, channel_id):
+@st.cache_data(ttl=30)
+def get_video_ids(_youtube, channel_id):
 
     video_ids = []
 
     max_results_load = 50
 
-    channel_data = get_channel_stats(youtube, channel_id)
+    channel_data = get_channel_stats(_youtube, channel_id)
 
-    request = youtube.playlistItems().list(
-        part = "contentDetails", 
-        playlistId = channel_data["playlist_id"],
-        maxResults = max_results_load
-    )
+    try:
+        request = _youtube.playlistItems().list(
+            part = "contentDetails", 
+            playlistId = channel_data["playlist_id"],
+            maxResults = max_results_load
+        )
+    except:
+        print ("Error getting video IDs")
 
     response = request.execute()
 
@@ -66,12 +74,15 @@ def get_video_ids(youtube, channel_id):
         if next_page_token is None:
             more_pages = False
         else:
-            request = youtube.playlistItems().list(
-                part = "contentDetails", 
-                playlistId = channel_data["playlist_id"],
-                maxResults = max_results_load,
-                pageToken = next_page_token
-            )
+            try:
+                request = _youtube.playlistItems().list(
+                    part = "contentDetails", 
+                    playlistId = channel_data["playlist_id"],
+                    maxResults = max_results_load,
+                    pageToken = next_page_token
+                )
+            except:
+                print("Error getting next page data")
 
             response = request.execute()
 
@@ -83,18 +94,21 @@ def get_video_ids(youtube, channel_id):
 
     return video_ids
 
-def get_video_details(youtube, channel_id):
+@st.cache_data(ttl=30)
+def get_video_details(_youtube, channel_id):
 
     all_video_stats = []
 
-    video_ids = get_video_ids(youtube, channel_id)
+    video_ids = get_video_ids(_youtube, channel_id)
 
     for i in range(0, len(video_ids), 50):
-
-        request = youtube.videos().list(
-            part = "snippet, statistics",
-            id = ",".join(video_ids[i:i+50])
-        )
+        try:
+            request = _youtube.videos().list(
+                part = "snippet, statistics",
+                id = ",".join(video_ids[i:i+50])
+            )
+        except:
+            print("Error getting video details")
 
         response = request.execute()
 
@@ -102,8 +116,8 @@ def get_video_details(youtube, channel_id):
             video_stats = dict(
                 Video_Title = video["snippet"]["title"],
                 Published_Date =  video["snippet"]["publishedAt"],
-                Views = video["statistics"]["viewCount"],
-                Likes = video["statistics"]["likeCount"],
+                Views = video["statistics"].get("viewCount"),
+                Likes = video["statistics"].get("likeCount"),
                 Comments = video["statistics"].get("commentCount"),
             )
 
@@ -111,8 +125,8 @@ def get_video_details(youtube, channel_id):
     
     return all_video_stats
 
-def display_stats(youtube, channel_id):
-    channel_stats = get_channel_stats(youtube, channel_id)
+def display_stats(_youtube, channel_id):
+    channel_stats = get_channel_stats(_youtube, channel_id)
 
     channel_stats = pd.DataFrame.from_dict([channel_stats])
 
@@ -123,12 +137,9 @@ def display_stats(youtube, channel_id):
     channel_stats["Num_Videos"] = pd.to_numeric(channel_stats["Num_Videos"])
 
     return (channel_stats)
-    
 
-
-
-def display_top_10(youtube, channel_id):
-    video_data = get_video_details(youtube, channel_id)
+def display_top_10(_youtube, channel_id):
+    video_data = get_video_details(_youtube, channel_id)
     video_data = pd.DataFrame(video_data)
     video_data["Published_Date"] = pd.to_datetime(video_data["Published_Date"]).dt.date
     video_data["Views"] = pd.to_numeric(video_data["Views"])
@@ -141,8 +152,8 @@ def display_top_10(youtube, channel_id):
     ax2.set(xlabel = "Views", ylabel = "Video Title")
     return ax2 
 
-def display_by_year(youtube, channel_id):
-    video_data = get_video_details(youtube, channel_id)
+def display_by_year(_youtube, channel_id):
+    video_data = get_video_details(_youtube, channel_id)
     video_data = pd.DataFrame(video_data)
     video_data["Published_Date"] = pd.to_datetime(video_data["Published_Date"]).dt.date
     video_data["Views"] = pd.to_numeric(video_data["Views"])
@@ -159,8 +170,8 @@ def display_by_year(youtube, channel_id):
     return ax2
 
 
-# def display_by_month(youtube, channel_id):
-#     video_data = get_video_details(youtube, channel_id)
+# def display_by_month(_youtube, channel_id):
+#     video_data = get_video_details(_youtube, channel_id)
 #     video_data = pd.DataFrame(video_data)
 #     video_data["Published_Date"] = pd.to_datetime(video_data["Published_Date"]).dt.date
 #     video_data["Views"] = pd.to_numeric(video_data["Views"])
@@ -181,12 +192,3 @@ def display_by_year(youtube, channel_id):
 
 #     return ax2
 
-# add download csv file
-# display_by_month(youtube, channel_id)
-# display_by_year(youtube, channel_id)
-# display_stats(youtube, channel_id)
-# display_top_10(youtube, channel_id)
-# print(get_channel_stats(youtube, channel_id))
-# print(get_video_ids(youtube, channel_id))
-# # print(channel_data["playlist_id"])
-# print(get_video_details(youtube, channel_id))

@@ -28,12 +28,6 @@ st.markdown("""
             * the channel's statistics
             * the channel's top 10 videos
             * the channel's video output by year
-
-            Python libraries used:
-            * pandas, streamlit, seaborn, pytube, google-api-python-client
-
-            Data source:
-            * Youtube Data API v3
             """)
 
 with st.form(key = "my_form"):
@@ -55,10 +49,6 @@ if video_url:
                     },
                 hide_index=True)
 
-
-
-    # st.text(be.get_video_ids(youtube, channel_id))
-
     st.subheader('Top 10 Videos', divider='rainbow')
     top10_plot = be.display_top_10(youtube, channel_id)
     st.pyplot(top10_plot.get_figure(), clear_figure=True)
@@ -68,4 +58,3 @@ if video_url:
     yearly_plot = be.display_by_year(youtube, channel_id)
     st.pyplot(yearly_plot.get_figure())
 
-# if video_url:
