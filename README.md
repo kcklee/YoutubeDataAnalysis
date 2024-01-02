@@ -1,10 +1,10 @@
-# YoutubeDataAnalysis
+# Youtube Data Analysis App
 
 ## About The Project
 
 Video Demo: 
 
-**Youtube Data Analysis App ** is a frontend application that collects, analyzes and displays a given Youtube channel’s statistics, top 10 videos and video output over time.
+**Youtube Data Analysis App** is a frontend application that collects, analyzes and displays a given Youtube channel’s statistics, top 10 videos and video output over time.
 
 ### Features
 
