@@ -1,6 +1,6 @@
 ## About The Project
 
-Video Demo: 
+Video Demo: https://youtu.be/jyGy8PbHIS8
 
 **Youtube Data Analysis App** is a frontend application that collects, analyzes and displays a given Youtube channel’s statistics, top 10 videos and video output over time.
 
@@ -25,5 +25,6 @@ All you have to do is enter a video link from a desired channel!
 
 - To launch the app on your local environment, you will need the above libraries installed using conda.
 - To use Youtube Data API v3, you will need to obtain an API key from Google Developer Console (available with a Google account) that you will store in a .env file
+- Once you're in the directory containing the project, type in the following command in the terminal to begin the app: streamlit run frontend.py  
 
 
