@@ -6,6 +6,8 @@ Video Demo:
 
 **Youtube Data Analysis App** is a frontend application that collects, analyzes and displays a given Youtube channel’s statistics, top 10 videos and video output over time.
 
+All you have to do is enter a video link from a desired channel!
+
 ### Features
 
 - Search feature to automate extraction of a given channel’s data 
@@ -16,7 +18,7 @@ Video Demo:
 ### Built With
 
 - Primary language: Python
-- Python libraries used: pandas, streamlit, seaborn, pytube, google-api-python-client
+- Python libraries used: pandas, streamlit, seaborn, pytube, google-api-python-client, python-dotenv
 - Data source: Youtube Data API v3
 
 <!-- GETTING STARTED -->
